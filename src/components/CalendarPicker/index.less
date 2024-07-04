@@ -1,0 +1,150 @@
+.container {
+  width: 300px;
+  height: 500px;
+  margin: calc(50vh - 250px) auto 0;
+  border: 1px solid #333;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .calendarHeader {
+    width: 280px;
+    padding-top: 10px;
+    height: 50px;
+    display: flex;
+    justify-content: space-around;
+
+    .prevMonth, .nextMonth, .prevYear, .nextYear {
+      width: 40px;
+      cursor: pointer;
+      text-align: center;
+      transition: transform 0.3s
+    }
+
+    .prevMonth:hover,
+    .nextMonth:hover,
+    .prevYear:hover,
+    .nextYear:hover {
+      transform: scale(1.2);
+    }
+  }
+
+  .weekdays {
+    width: 300px;
+    display: flex;
+    justify-content: space-around;
+    color: #c5c3c3;
+    height: 50px;
+  }
+
+  .days {
+    width: 300px;
+    height: 300px;
+
+    .week {
+      width: inherit;
+      height: 40px;
+      display: flex;
+    }
+
+    .dayDiv {
+      width: 42px;
+      height: 36px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .backColor {
+      background: #959af3;
+    }
+
+    .backColorRight, .backColorLeft {
+      position: relative;
+      width: 42px;
+      height: 36px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .backColorRight::after {
+      z-index: 0;
+      content: "";
+      display: block;
+      position: absolute;
+      left: 50%;
+      top: 0;
+      width: 50%;
+      height: 100%;
+      background-color: #959af3;
+    }
+
+    .backColorLeft::after {
+      content: "";
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 50%; /* 或者使用 calc(50% - 某个偏移量) */
+      height: 100%;
+      background-color: #959af3;
+    }
+
+
+    .lastMonthDay, .nextMonthDay {
+      box-sizing: border-box;
+      width: 36px;
+      height: 36px;
+      color: #c5c3c3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .day {
+      z-index: 1;
+      box-sizing: border-box;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+    }
+
+    .lastMonthDay:hover,
+    .nextMonthDay:hover,
+    .day:hover {
+      border: 1px solid #5e3587;
+      cursor: pointer;
+      border-radius: 18px;
+    }
+
+
+    .dayActive {
+      background-color: #5e3587;
+      color: white;
+      cursor: pointer;
+      border-radius: 18px;
+    }
+
+  }
+
+  .times {
+    width: 280px;
+    height: 100px;
+
+    .startTime, .endTime {
+      width: 280px;
+      height: 50px;
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+
+  .dayShow {
+    cursor: pointer;
+    width: 90px;
+    height: 30px;
+  }
+}
+
