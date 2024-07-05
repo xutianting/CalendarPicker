@@ -1,5 +1,13 @@
 import TimeEditor from "@/components/CalendarPicker/components/TimeEditor.tsx";
-import { showDate,renderTime } from "@/components/CalendarPicker/utils.ts";
+import { showDate } from "@/components/CalendarPicker/utils.ts";
+import styles from './SetDayRange.module.less'
+import { useState } from "react";
+
+export type Time = {
+    hour: number;
+    minute: number;
+    second: number;
+};
 
 type SetDayRangeProps={
     currentDate:Date,
@@ -12,37 +20,74 @@ type SetDayRangeProps={
 }
 const SetDayRange=(props:SetDayRangeProps)=> {
     const {currentDate,selectedStartDate,selectedEndDate,onCurrentDate,onStartDate,onEndDate,showTime} = props
-    return <div className="times">
-        <div className="startTime">
+    const [startTimes,setStartTimes] = useState<Time>()
+    const [endTimes,setEndTimes] = useState<Time>()
+    const setCurrentTime=()=>{
+        return {
+            hour:new Date().getHours(),
+            minute: new Date().getMinutes(),
+            second:new Date().getSeconds(),
+        }
+    }
+
+    return <div className={styles.times}>
+        <div className={styles.startTime}>
             <div style={{cursor: 'pointer'}} onClick={() => {
                 if ( selectedEndDate ){
                     if ( currentDate > selectedEndDate ){
-                        alert('请选择比结束日期大的时间')
+                        alert('请选择比结束日期小的时间')
                         return
                     }
                 }
                 onStartDate(currentDate)
+
+                if(showTime){
+                    setStartTimes(setCurrentTime())
+                }
             }}>开始时间
             </div>
-            <div className="dayShow" onClick={() => {
+            <div className={styles.dayShow} onClick={() => {
                 if(selectedStartDate){
                     onCurrentDate(new Date(showDate(selectedStartDate)))
                 }
             }}>{showDate(selectedStartDate)}</div>
-            <div>{renderTime(currentDate)}</div>
+            <div>
+                {selectedStartDate&&startTimes&&<TimeEditor value={startTimes} onChange={(val) => {
+                    if(showDate(selectedStartDate) === showDate(selectedEndDate)){
+                        if(!endTimes){
+                            setStartTimes(val)
+                            onStartDate(new Date(selectedStartDate.getFullYear(),selectedStartDate.getMonth(),selectedStartDate.getDate(),val.hour,val.minute,val.second))
+                            return
+                        }
+                        if(val.hour > endTimes.hour||val.minute>endTimes.minute||val.second>endTimes.second){
+                            alert("开始时间不能大于结束时间")
+                            const time={...startTimes}
+                            setStartTimes(time)
+                            onStartDate(new Date(selectedStartDate.getFullYear(),selectedStartDate.getMonth(),selectedStartDate.getDate(),time.hour,time.minute,time.second))
+                            return
+                        }
+                    }else{
+                        setStartTimes(val)
+                        onStartDate(new Date(selectedStartDate.getFullYear(),selectedStartDate.getMonth(),selectedStartDate.getDate(),val.hour,val.minute,val.second))
+                    }
+                }}/>}
+            </div>
         </div>
-        <div className="endTime">
-            <div onClick={() => {
+        <div className={styles.endTime}>
+            <div style={{cursor: 'pointer'}} onClick={() => {
                 if ( selectedStartDate ){
                     if ( currentDate < selectedStartDate ){
-                        alert('请选择比开始日期小的时间')
+                        alert('请选择比开始日期大的时间')
                         return
                     }
                 }
                 onEndDate(currentDate)
+                if(showTime){
+                    setEndTimes(setCurrentTime())
+                }
             }}>结束时间
             </div>
-            <div className="dayShow" onClick={() => {
+            <div className={styles.dayShow} onClick={() => {
                 if(selectedEndDate){
                     onCurrentDate(new Date(showDate(selectedEndDate)))
                 }
@@ -50,22 +95,25 @@ const SetDayRange=(props:SetDayRangeProps)=> {
                 showDate(selectedEndDate)
             }</div>
             <div>
-                <TimeEditor value={{hours: '07',minutes: '12',seconds: '23'}} onChange={(val) => {
-                    console.log('233',val)
-                }}/>
-                {/*<input*/}
-                {/*    style={{width: 50,height: 50,background: 'pink',overflowY: 'hidden'}}*/}
-                {/*    onWheel={handleScroll} value={hourTime}*/}
-                {/*    onChange={(e) => {*/}
-                {/*        if ( e.target.value ){*/}
-                {/*            setHourTime(parseInt(e.target.value))*/}
-                {/*        } else{*/}
-                {/*            setHourTime(0)*/}
-                {/*        }*/}
-                {/*    }}*/}
-                {/*/>*/}
-
-                :36
+                {selectedEndDate&&endTimes&& <TimeEditor value={endTimes} onChange={(val) => {
+                    if(showDate(selectedStartDate) === showDate(selectedEndDate)){
+                        if(!startTimes){
+                            setEndTimes(val)
+                            onEndDate(new Date(selectedEndDate.getFullYear(),selectedEndDate.getMonth(),selectedEndDate.getDate(),val.hour,val.minute,val.second))
+                            return
+                        }
+                        if(val.hour < startTimes.hour||val.minute<startTimes.minute||val.second<startTimes.second){
+                            alert('结束时间不能小于开始时间')
+                            const time={...endTimes}
+                            setEndTimes(time)
+                            onEndDate(new Date(selectedEndDate.getFullYear(),selectedEndDate.getMonth(),selectedEndDate.getDate(),time.hour,time.minute,time.second))
+                            return
+                        }
+                    }else{
+                        setEndTimes(val)
+                        onEndDate(new Date(selectedEndDate.getFullYear(),selectedEndDate.getMonth(),selectedEndDate.getDate(),val.hour,val.minute,val.second))
+                    }
+                }}/>}
             </div>
         </div>
     </div>

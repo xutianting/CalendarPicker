@@ -1,14 +1,14 @@
 .container {
-  width: 300px;
+  width: 350px;
   height: 500px;
   margin: calc(50vh - 250px) auto 0;
-  border: 1px solid #333;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
   align-items: center;
 
   .calendarHeader {
-    width: 280px;
+    width: inherit;
     padding-top: 10px;
     height: 50px;
     display: flex;
@@ -30,7 +30,7 @@
   }
 
   .weekdays {
-    width: 300px;
+    width: 350px;
     display: flex;
     justify-content: space-around;
     color: #c5c3c3;
@@ -38,8 +38,8 @@
   }
 
   .days {
-    width: 300px;
-    height: 300px;
+    width: inherit;
+    height: 270px;
 
     .week {
       width: inherit;
@@ -48,19 +48,19 @@
     }
 
     .dayDiv {
-      width: 42px;
+      width: 50px;
       height: 36px;
       display: flex;
       justify-content: center;
     }
 
     .backColor {
-      background: #959af3;
+      background: #f4f0f8;
     }
 
     .backColorRight, .backColorLeft {
       position: relative;
-      width: 42px;
+      width: 50px;
       height: 36px;
       display: flex;
       justify-content: center;
@@ -75,7 +75,7 @@
       top: 0;
       width: 50%;
       height: 100%;
-      background-color: #959af3;
+      background-color: #f4f0f8;
     }
 
     .backColorLeft::after {
@@ -86,7 +86,7 @@
       left: 0;
       width: 50%; /* 或者使用 calc(50% - 某个偏移量) */
       height: 100%;
-      background-color: #959af3;
+      background-color: #f4f0f8;
     }
 
 
@@ -98,6 +98,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      transition: border-color 0.3s;
     }
 
     .day {
@@ -108,12 +109,13 @@
       display: flex;
       align-items: center;
       justify-content: center;
-
+      transition: background-color 0.3s,border-color 0.3s;
     }
 
     .lastMonthDay:hover,
     .nextMonthDay:hover,
-    .day:hover {
+    .day:hover,
+    .daySelect{
       border: 1px solid #5e3587;
       cursor: pointer;
       border-radius: 18px;
@@ -129,22 +131,7 @@
 
   }
 
-  .times {
-    width: 280px;
-    height: 100px;
 
-    .startTime, .endTime {
-      width: 280px;
-      height: 50px;
-      display: flex;
-      justify-content: space-between;
-    }
-  }
 
-  .dayShow {
-    cursor: pointer;
-    width: 90px;
-    height: 30px;
-  }
 }
 

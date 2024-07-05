@@ -13,7 +13,7 @@ export const renderTime = (date: Date) => {
     return `${currentHour}:${currentMinute}:${currentSecond}`
 }
 
-export const showYearMonth = (date: Date | null) => {
+export const showYearMonth = (date?: Date) => {
     if ( !date ){
         return ''
     }

@@ -11,41 +11,24 @@ type CalendarPickerProps = {
     showTime?: boolean,
 }
 const CalendarPicker = (props: CalendarPickerProps) => {
-    const {value,onChange,showTime = true} = props
+    const {onChange,showTime = true} = props
     const weekdays = [ 'S','M','T','W','T','F','S' ];
     const [ currentDate,setCurrentDate ] = useState(new Date());
     const [ selectedDate,setSelectedDate ] = useState<Date>();
     const [ selectedStartDate,setSelectedStartDate ] = useState<Date>();
     const [ selectedEndDate,setSelectedEndDate ] = useState<Date>();
 
-    const [ hourTime,setHourTime ] = useState(0);
     const {days} = useCalendarPicker(currentDate,selectedStartDate,selectedEndDate);
     const year = currentDate.getFullYear()
     const month = currentDate.getMonth()
 
-    const getCurrentDayNumber = (date: Date | null) => {
+    const getCurrentDayNumber = (date?: Date ) => {
         if ( !date ){
             return 0
         }
         return date.getDate()
     }
-    const handleScroll = (event) => {
-        // // 阻止事件冒泡
-        // event.stopPropagation();
-        // // 阻止默认行为
-        // event.preventDefault();
 
-        // 处理鼠标滚轮事件的逻辑
-        if ( event.deltaY > 0 ){
-            setHourTime(prevState => prevState - 1)
-            // 向下滚动
-            console.log("向下滚动");
-        } else if ( event.deltaY < 0 ){
-            setHourTime(prevState => prevState + 1)
-            // 向上滚动
-            console.log("向上滚动");
-        }
-    };
     return <div>
         <div className="container">
             <div>
@@ -78,9 +61,41 @@ const CalendarPicker = (props: CalendarPickerProps) => {
                                     </div>
 
                                 } else{
-                                    return <div key={index} className={day.hasBack ? "dayDiv backColor" : "dayDiv"}>
+                                    const isStartDate=showDate(selectedStartDate) === showDate(new Date(year,month,day.date))
+                                    const isEndDate=showDate(selectedEndDate) === showDate(new Date(year,month,day.date))
+                                    const selectedBackCss=()=>{
+                                        if(day.hasBack){
+                                            if(showDate(selectedStartDate)===showDate(selectedEndDate)){
+                                                return "dayDiv backColor"
+                                            }
+                                            else if(isStartDate){
+                                                return "dayDiv backColorRight"
+                                            }else if(isEndDate){
+                                                return "dayDiv backColorLeft"
+                                            }else{
+                                                return "dayDiv backColor"
+                                            }
+                                        }else{
+                                            return "dayDiv"
+                                        }
+                                    }
+                                    const selectedCss=()=>{
+                                        if(isStartDate){
+                                            return "day dayActive"
+                                        }else if(isEndDate){
+                                            return "day dayActive"
+                                        }else if(getCurrentDayNumber(selectedDate) === day.date &&
+                                            showYearMonth(currentDate) === showYearMonth(selectedDate)){
+                                            return "day daySelect"
+                                        }
+                                        else{
+                                            return "day"
+                                        }
+                                    }
+
+                                    return <div key={index} className={selectedBackCss()}>
                                         <div
-                                            className={(getCurrentDayNumber(selectedDate) === day.date && showYearMonth(currentDate) === showYearMonth(selectedDate)) || showDate(selectedStartDate) === showDate(new Date(currentDate.getFullYear(),currentDate.getMonth(),day.date)) || showDate(selectedEndDate) === showDate(new Date(currentDate.getFullYear(),currentDate.getMonth(),day.date)) ? "day dayActive" : "day"}
+                                            className={selectedCss()}
                                             onClick={() => {
                                                 setCurrentDate(new Date(year,month,day.date))
                                                 setSelectedDate(new Date(year,month,day.date))
