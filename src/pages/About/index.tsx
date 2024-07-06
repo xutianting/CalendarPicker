@@ -12,11 +12,8 @@ const About=()=>{
             <CalendarPicker
                 showTime={true}
                 onChange={(val) => {
-
                     setInputValue(showDate(val[0]) + ' ' + renderTime(val[0]) +
                         '——' + showDate(val[1]) + ' ' + renderTime(val[1]))
-
-
                 }}
             />
         </div>
