@@ -11,23 +11,27 @@ const TimeEditor=(props:TimeEditorProps)=>{
     const divRef = useRef(null);
     const { value, onChange } = props;
     const [isEditable, setIsEditable] = useState(false);
-
-    const [hour,setHour]=useState(value.hour)
-    const [minute,setMinute]=useState(value.minute)
-    const [second,setSecond]=useState(value.second)
+    const [hour,setHour]=useState(0)
+    const [minute,setMinute]=useState(0)
+    const [second,setSecond]=useState(0)
 
     useEffect(() => {
         setHour(value.hour)
         setMinute(value.minute)
         setSecond(value.second)
+        if(value.hour!==hour||value.minute!==minute||value.second!==second){
+            onChange({hour: value.hour,minute: value.minute,second: value.second});
+        }
     },[value]);
 
     const handleClickOutside = (event:MouseEvent) => {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         if (divRef.current&&!divRef.current.contains(event.target as Node)) {
-            setIsEditable(false);
-            onChange({ hour, minute, second });
+            if(isEditable){
+                setIsEditable(false);
+                onChange({hour,minute,second});
+            }
         }
     };
 
@@ -87,7 +91,9 @@ const TimeEditor=(props:TimeEditorProps)=>{
         <div ref={divRef} onClick={handleTimeClick} >
             {isEditable ?
                 <div className={styles.container}>
-                    <input type="text" name="hour" onWheel={handleHourScroll} value={showNumber(hour)}  />:
+                    <input type="text" name="hour"
+                           onWheel={handleHourScroll}
+                           value={showNumber(hour)}  />:
                     <input type="text" name="minute" onWheel={handleMinuteScroll} value={showNumber(minute)}  />:
                     <input type="text" name="second" onWheel={handleSecondScroll} value={showNumber(second)}  />
                 </div>

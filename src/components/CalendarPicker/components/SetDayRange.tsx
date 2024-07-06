@@ -34,7 +34,8 @@ const SetDayRange=(props:SetDayRangeProps)=> {
         <div className={styles.startTime}>
             <div style={{cursor: 'pointer'}} onClick={() => {
                 if ( selectedEndDate ){
-                    if ( currentDate > selectedEndDate ){
+                    const date=new Date(currentDate.getFullYear(),currentDate.getMonth(),currentDate.getDate(),0,0,0)
+                    if ( date > selectedEndDate ){
                         alert('请选择比结束日期小的时间')
                         return
                     }
@@ -43,6 +44,18 @@ const SetDayRange=(props:SetDayRangeProps)=> {
 
                 if(showTime){
                     setStartTimes(setCurrentTime())
+                    // if(showDate(selectedStartDate) === showDate(selectedEndDate)){
+                    //     console.log(1)
+                    //     if(endTimes){
+                    //         console.log(2)
+                    //         const time: Time = {...endTimes}
+                    //         setStartTimes(time)
+                    //     }else{
+                    //         setStartTimes(setCurrentTime())
+                    //     }
+                    // }else{
+                    //     setStartTimes(setCurrentTime())
+                    // }
                 }
             }}>开始时间
             </div>
@@ -59,13 +72,17 @@ const SetDayRange=(props:SetDayRangeProps)=> {
                             onStartDate(new Date(selectedStartDate.getFullYear(),selectedStartDate.getMonth(),selectedStartDate.getDate(),val.hour,val.minute,val.second))
                             return
                         }
-                        if(val.hour > endTimes.hour||val.minute>endTimes.minute||val.second>endTimes.second){
+                        if(val.hour > endTimes.hour||
+                            (val.hour <= endTimes.hour&&val.minute>endTimes.minute)||
+                            (val.hour <= endTimes.hour&&val.minute<=endTimes.minute&&val.second>endTimes.second)){
                             alert("开始时间不能大于结束时间")
-                            const time={...startTimes}
+                            const time={...endTimes}
                             setStartTimes(time)
                             onStartDate(new Date(selectedStartDate.getFullYear(),selectedStartDate.getMonth(),selectedStartDate.getDate(),time.hour,time.minute,time.second))
                             return
                         }
+                        setStartTimes(val)
+                        onStartDate(new Date(selectedStartDate.getFullYear(),selectedStartDate.getMonth(),selectedStartDate.getDate(),val.hour,val.minute,val.second))
                     }else{
                         setStartTimes(val)
                         onStartDate(new Date(selectedStartDate.getFullYear(),selectedStartDate.getMonth(),selectedStartDate.getDate(),val.hour,val.minute,val.second))
@@ -76,7 +93,8 @@ const SetDayRange=(props:SetDayRangeProps)=> {
         <div className={styles.endTime}>
             <div style={{cursor: 'pointer'}} onClick={() => {
                 if ( selectedStartDate ){
-                    if ( currentDate < selectedStartDate ){
+                    const date=new Date(currentDate.getFullYear(),currentDate.getMonth(),currentDate.getDate(),23,59,59)
+                    if ( date < selectedStartDate ){
                         alert('请选择比开始日期大的时间')
                         return
                     }
@@ -102,13 +120,17 @@ const SetDayRange=(props:SetDayRangeProps)=> {
                             onEndDate(new Date(selectedEndDate.getFullYear(),selectedEndDate.getMonth(),selectedEndDate.getDate(),val.hour,val.minute,val.second))
                             return
                         }
-                        if(val.hour < startTimes.hour||val.minute<startTimes.minute||val.second<startTimes.second){
+                        if(val.hour < startTimes.hour||
+                            (val.hour >= startTimes.hour&&val.minute<startTimes.minute)||
+                            (val.hour >= startTimes.hour&&val.minute>=startTimes.minute&&val.second<startTimes.second)){
                             alert('结束时间不能小于开始时间')
-                            const time={...endTimes}
+                            const time={...startTimes}
                             setEndTimes(time)
                             onEndDate(new Date(selectedEndDate.getFullYear(),selectedEndDate.getMonth(),selectedEndDate.getDate(),time.hour,time.minute,time.second))
                             return
                         }
+                        setEndTimes(val)
+                        onEndDate(new Date(selectedEndDate.getFullYear(),selectedEndDate.getMonth(),selectedEndDate.getDate(),val.hour,val.minute,val.second))
                     }else{
                         setEndTimes(val)
                         onEndDate(new Date(selectedEndDate.getFullYear(),selectedEndDate.getMonth(),selectedEndDate.getDate(),val.hour,val.minute,val.second))
